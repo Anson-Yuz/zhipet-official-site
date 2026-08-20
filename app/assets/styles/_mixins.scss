@@ -1,0 +1,46 @@
+@mixin focus-visible {
+  &:focus-visible {
+    box-shadow: var(--focus-ring);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+}
+
+@mixin touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@mixin section-spacing {
+  padding-block: var(--space-10);
+
+  @media (max-width: 1023px) {
+    padding-block: var(--space-8);
+  }
+
+  @media (max-width: 639px) {
+    padding-block: var(--space-7);
+  }
+}
+
+@mixin subtle-lift($lift: -2px) {
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-out),
+    background var(--motion-duration-fast) var(--motion-ease-out),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out),
+    transform var(--motion-duration-fast) var(--motion-ease-out);
+
+  &:hover,
+  &:focus-within {
+    border-color: rgb(200 138 56 / 45%);
+    box-shadow: var(--shadow-hover);
+    transform: translateY($lift);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:hover,
+    &:focus-within {
+      transform: none;
+    }
+  }
+}

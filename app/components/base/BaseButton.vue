@@ -1,0 +1,273 @@
+<template>
+  <NuxtLink
+    v-if="to"
+    :to="resolvedRouteTarget"
+    class="base-button"
+    :class="buttonClasses"
+    :aria-disabled="isLinkUnavailable ? 'true' : undefined"
+    :tabindex="isLinkUnavailable ? -1 : undefined"
+    @click="handleClick"
+  >
+    <span v-if="$slots.iconLeft" class="base-button__icon" aria-hidden="true">
+      <slot name="iconLeft" />
+    </span>
+    <span class="base-button__label">
+      <slot />
+    </span>
+    <span v-if="$slots.iconRight" class="base-button__icon base-button__icon--right" aria-hidden="true">
+      <slot name="iconRight" />
+    </span>
+  </NuxtLink>
+  <a
+    v-else-if="href"
+    :href="safeHref"
+    class="base-button"
+    :class="buttonClasses"
+    :target="safeHref && external ? '_blank' : undefined"
+    :rel="safeHref && external ? 'noopener noreferrer' : undefined"
+    :aria-disabled="isLinkUnavailable ? 'true' : undefined"
+    :tabindex="isLinkUnavailable ? -1 : undefined"
+    @click="handleClick"
+  >
+    <span v-if="$slots.iconLeft" class="base-button__icon" aria-hidden="true">
+      <slot name="iconLeft" />
+    </span>
+    <span class="base-button__label">
+      <slot />
+    </span>
+    <span v-if="$slots.iconRight" class="base-button__icon base-button__icon--right" aria-hidden="true">
+      <slot name="iconRight" />
+    </span>
+  </a>
+  <button
+    v-else
+    class="base-button"
+    :class="buttonClasses"
+    :type="type"
+    :disabled="isUnavailable"
+    @click="handleClick"
+  >
+    <span v-if="loading" class="base-button__loader" aria-hidden="true" />
+    <span v-if="$slots.iconLeft && !loading" class="base-button__icon" aria-hidden="true">
+      <slot name="iconLeft" />
+    </span>
+    <span class="base-button__label">
+      <slot />
+    </span>
+    <span v-if="$slots.iconRight" class="base-button__icon base-button__icon--right" aria-hidden="true">
+      <slot name="iconRight" />
+    </span>
+  </button>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { ButtonSize, ButtonVariant } from '~/types/ui'
+import { toSafeHref } from '~/utils/safe-href'
+
+const props = withDefaults(
+  defineProps<{
+    variant?: ButtonVariant
+    size?: ButtonSize
+    type?: 'button' | 'submit' | 'reset'
+    to?: string
+    href?: string
+    external?: boolean
+    loading?: boolean
+    disabled?: boolean
+    block?: boolean
+  }>(),
+  {
+    variant: 'primary',
+    size: 'md',
+    type: 'button',
+    to: undefined,
+    href: undefined,
+    external: false,
+    loading: false,
+    disabled: false,
+    block: false,
+  },
+)
+
+const emit = defineEmits<{
+  click: [event: MouseEvent]
+}>()
+
+const isUnavailable = computed(() => props.disabled || props.loading)
+const safeHref = computed(() => toSafeHref(props.href))
+const hasUnsafeHref = computed(() => Boolean(props.href && !safeHref.value))
+const isLinkUnavailable = computed(() => isUnavailable.value || hasUnsafeHref.value)
+const resolvedRouteTarget = computed(() => (isLinkUnavailable.value ? undefined : props.to))
+
+const buttonClasses = computed(() => [
+  `base-button--${props.variant}`,
+  `base-button--${props.size}`,
+  {
+    'base-button--block': props.block,
+    'is-loading': props.loading,
+    'is-disabled': isLinkUnavailable.value,
+  },
+])
+
+const handleClick = (event: MouseEvent) => {
+  if (isLinkUnavailable.value) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
+
+  emit('click', event)
+}
+</script>
+
+<style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
+
+.base-button {
+  @include focus-visible;
+  @include touch-target;
+
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--radius-button);
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+  transition:
+    color var(--motion-duration-fast) var(--motion-ease-out),
+    background var(--motion-duration-fast) var(--motion-ease-out),
+    border-color var(--motion-duration-fast) var(--motion-ease-out),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-out),
+    transform var(--motion-duration-fast) var(--motion-ease-out);
+
+  &:not(.is-disabled):hover {
+    transform: translateY(-1px);
+  }
+
+  &.is-disabled {
+    opacity: 0.58;
+    pointer-events: none;
+  }
+}
+
+.base-button--sm {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+.base-button--md {
+  min-height: 48px;
+  padding: 0 20px;
+  font-size: 15px;
+}
+
+.base-button--lg {
+  min-height: 54px;
+  padding: 0 24px;
+  font-size: 16px;
+}
+
+.base-button--primary {
+  color: var(--color-surface);
+  background: var(--color-brand-900);
+  border-color: var(--color-brand-900);
+
+  &:not(.is-disabled):hover {
+    background: var(--color-brand-800);
+    border-color: var(--color-brand-800);
+    box-shadow: 0 14px 30px rgb(20 63 50 / 18%);
+  }
+}
+
+.base-button--secondary {
+  color: var(--color-brand-900);
+  background: transparent;
+  border-color: rgb(47 36 27 / 26%);
+
+  &:not(.is-disabled):hover {
+    border-color: rgb(20 63 50 / 42%);
+    background: rgb(20 63 50 / 4%);
+  }
+}
+
+.base-button--ghost {
+  color: var(--color-brand-900);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+
+  &:not(.is-disabled):hover {
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+.base-button--text {
+  min-height: 0;
+  padding: 0;
+  color: var(--color-brand-900);
+  background: transparent;
+  border-color: transparent;
+
+  &:not(.is-disabled):hover {
+    color: var(--color-brand-900);
+    transform: none;
+
+    .base-button__icon--right {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.base-button--block {
+  width: 100%;
+}
+
+.base-button__icon,
+.base-button__loader {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+}
+
+.base-button__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.base-button__icon--right {
+  transition: transform var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.base-button__loader {
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: button-spin 760ms linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (max-width: 639px) {
+  .base-button--block {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .base-button:not(.is-disabled):hover,
+  .base-button--text:not(.is-disabled):hover .base-button__icon--right {
+    transform: none;
+  }
+}
+</style>
