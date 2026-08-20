@@ -24,7 +24,7 @@
    ```bash
    sudo NUXT_PUBLIC_SITE_URL=https://petsense-agent.com \
      bash deploy/tencent-cloud/scripts/stage-release.sh \
-     https://github.com/songtaoluo007-maker/zhipet-official-site.git \
+     https://github.com/Anson-Yuz/zhipet-official-site.git \
      FULL_40_CHARACTER_COMMIT_SHA
    ```
 

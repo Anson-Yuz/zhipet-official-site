@@ -5,10 +5,10 @@ describe('site URL helpers', () => {
   it('prefers a configured public site URL and keeps a base path for GitHub Pages', () => {
     expect(
       resolveSiteBaseUrl(
-        'https://songtaoluo007-maker.github.io/zhipet-official-site/?q=1',
+        'https://anson-yuz.github.io/zhipet-official-site/?q=1',
         'http://127.0.0.1:3000',
       ),
-    ).toBe('https://songtaoluo007-maker.github.io/zhipet-official-site/')
+    ).toBe('https://anson-yuz.github.io/zhipet-official-site/')
   })
 
   it('falls back to the request origin when the configured URL is empty or invalid', () => {
@@ -19,14 +19,14 @@ describe('site URL helpers', () => {
   })
 
   it('builds canonical URLs under the configured base path', () => {
-    const baseUrl = 'https://songtaoluo007-maker.github.io/zhipet-official-site/'
+    const baseUrl = 'https://anson-yuz.github.io/zhipet-official-site/'
 
     expect(resolveSiteUrl('/', baseUrl)).toBe(baseUrl)
     expect(resolveSiteUrl('/products', baseUrl)).toBe(
-      'https://songtaoluo007-maker.github.io/zhipet-official-site/products',
+      'https://anson-yuz.github.io/zhipet-official-site/products',
     )
     expect(resolveSiteUrl('/sitemap.xml', baseUrl)).toBe(
-      'https://songtaoluo007-maker.github.io/zhipet-official-site/sitemap.xml',
+      'https://anson-yuz.github.io/zhipet-official-site/sitemap.xml',
     )
   })
 })

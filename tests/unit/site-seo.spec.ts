@@ -9,16 +9,16 @@ import {
 describe('site seo helpers', () => {
   it('preserves GitHub Pages base paths when resolving absolute URLs', () => {
     const siteOrigin = resolveSiteOrigin(
-      'https://songtaoluo007-maker.github.io/zhipet-official-site/',
+      'https://anson-yuz.github.io/zhipet-official-site/',
       'http://127.0.0.1:3000',
     )
 
-    expect(siteOrigin).toBe('https://songtaoluo007-maker.github.io/zhipet-official-site')
+    expect(siteOrigin).toBe('https://anson-yuz.github.io/zhipet-official-site')
     expect(resolveAbsoluteUrl('/research/health-signals', siteOrigin)).toBe(
-      'https://songtaoluo007-maker.github.io/zhipet-official-site/research/health-signals',
+      'https://anson-yuz.github.io/zhipet-official-site/research/health-signals',
     )
     expect(createShareImageUrl(siteOrigin)).toBe(
-      'https://songtaoluo007-maker.github.io/zhipet-official-site/images/share/zhipet-og.png',
+      'https://anson-yuz.github.io/zhipet-official-site/images/share/zhipet-og.png',
     )
   })
 

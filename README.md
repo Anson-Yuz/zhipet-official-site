@@ -10,7 +10,7 @@
 官网不提供用户注册或登录。软件 App 如后续上线，其账号体系、数据规则和用户协议将独立建设，避免用户在官网二次登录。
 
 - 维护团队：知宠团队
-- 在线预览：[知宠 ZHIPET 官网](https://songtaoluo007-maker.github.io/zhipet-official-site/)
+- 在线预览：[知宠 ZHIPET 官网](https://anson-yuz.github.io/zhipet-official-site/)
 
 ## 项目预览
 

@@ -7,7 +7,7 @@ if [[ ${EUID} -ne 0 ]]; then
   exit 1
 fi
 
-repo_url=${1:-https://github.com/songtaoluo007-maker/zhipet-official-site.git}
+repo_url=${1:-https://github.com/Anson-Yuz/zhipet-official-site.git}
 git_ref=${2:-}
 site_url=${NUXT_PUBLIC_SITE_URL:-https://petsense-agent.com}
 release_root=/srv/zhipet/releases
